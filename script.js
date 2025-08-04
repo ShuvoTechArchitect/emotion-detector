@@ -1,7 +1,7 @@
 async function analyzeEmotion() {
   const postText = document.getElementById('postInput').value;
 
-  const response = await fetch('https://huggingface.co/spaces/YOUR_USERNAME/YOUR_MODEL/api/predict', {
+  const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ text: postText })
