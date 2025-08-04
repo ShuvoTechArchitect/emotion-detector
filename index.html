@@ -3,16 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Emotion Detector App</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>Emotion Detector from Social Media Post</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 40px;
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    textarea {
+      width: 90%;
+      max-width: 500px;
+      height: 120px;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      font-size: 16px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #222;
+      font-weight: bold;
+    }
+
+    footer {
+      margin-top: 60px;
+      font-size: 14px;
+      color: #777;
+    }
+  </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Emotion Detector</h1>
-    <textarea id="postInput" placeholder="Paste your social media post here (Bangla or English)..."></textarea>
-    <button onclick="analyzeEmotion()">Analyze Emotion</button>
-    <div id="result"></div>
-  </div>
-  <script src="script.js"></script>
+  <h1>Emotion Detector from Social Media Post</h1>
+  <p>Enter your Bengali or English post below:</p>
+
+  <textarea id="inputText" placeholder="Type your post here..."></textarea><br />
+  <button onclick="detectEmotion()">Detect Emotion</button>
+
+  <div id="result"></div>
+
+  <footer>
+    &copy; 2025 by ShuvoTech Architect — All Rights Reserved.
+  </footer>
+
+  <script>
+    async function detectEmotion() {
+      const inputText = document.getElementById("inputText").value.trim();
+      const resultDiv = document.getElementById("result");
+      
+      if (!inputText) {
+        resultDiv.innerText = "Please enter some text.";
+        return;
+      }
+
+      resultDiv.innerText = "Analyzing emotion...";
+
+      try {
+        const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            data: [inputText]
+          })
+        });
+
+        const result = await response.json();
+        const emotion = result?.data?.[0];
+        resultDiv.innerText = `🔍 Detected Emotion: ${emotion}`;
+      } catch (error) {
+        resultDiv.innerText = "❌ Error detecting emotion. Please try again later.";
+        console.error(error);
+      }
+    }
+  </script>
 </body>
 </html>
