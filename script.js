@@ -4,9 +4,16 @@ async function analyzeEmotion() {
   const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: postText })
+    body: JSON.stringify({ data: [postText] })  // ✅ Correct format for Hugging Face API
   });
 
-  const data = await response.json();
-  document.getElementById('result').innerText = `Emotion: ${data.label || data}`;
+  const result = await response.json();
+  
+  try {
+    const emotion = result.data[0].label || result.data[0];  // ✅ Safe extraction
+    document.getElementById('result').innerText = `Emotion: ${emotion}`;
+  } catch (error) {
+    document.getElementById('result').innerText = "Emotion detection failed.";
+    console.error("Error parsing API response:", result);
+  }
 }
