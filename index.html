@@ -44,41 +44,25 @@
   <div id="result">Emotion: </div>
 
   <script>
-    async function analyzeEmotion() {
-      const postText = document.getElementById('postInput').value.trim();
-      if (!postText) {
-        alert("Please enter some text first.");
-        return;
-      }
+  async function analyzeEmotion() {
+    const postText = document.getElementById('postInput').value;
 
-      const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: [postText] }),
-      });
+    const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ data: [postText] })
+    });
 
-      const result = await response.json();
+    const result = await response.json();
 
-      try {
-        const emotion = Array.isArray(result.data) ? result.data[0] : "Unknown";
-
-        const emotionMap = {
-          happy: "😊 আনন্দ",
-          sad: "😢 দুঃখ",
-          angry: "😠 রাগ",
-          fear: "😨 ভয়",
-          surprise: "😲 বিস্ময়",
-          neutral: "😐 স্বাভাবিক",
-          disgust: "🤢 ঘৃণা",
-          Unknown: "❓ অজানা",
-        };
-
-        document.getElementById("result").innerText = `Emotion: ${emotionMap[emotion] || emotion}`;
-      } catch (err) {
-        document.getElementById("result").innerText = "Emotion detection failed.";
-        console.error("Error parsing API response:", err);
-      }
+    try {
+      const emotion = result?.data?.[0]?.label || "Unknown";
+      document.getElementById('result').innerText = `Emotion: ${emotion}`;
+    } catch (error) {
+      document.getElementById('result').innerText = "Emotion detection failed.";
+      console.error("Error parsing API response:", result);
     }
-  </script>
+  }
+</script>
 </body>
 </html>
