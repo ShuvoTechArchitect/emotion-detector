@@ -76,11 +76,11 @@
       const resultDiv = document.getElementById("result");
       
       if (!inputText) {
-        resultDiv.innerText = "Please enter some text.";
+        resultDiv.innerText = "⚠️ Please enter some text.";
         return;
       }
 
-      resultDiv.innerText = "Analyzing emotion...";
+      resultDiv.innerText = "⏳ Analyzing emotion...";
 
       try {
         const response = await fetch("https://shuvo100-emotion-detector-api.hf.space/run/predict", {
@@ -94,11 +94,11 @@
         });
 
         const result = await response.json();
-        const emotion = result?.data?.[0];
-        resultDiv.innerText = `🔍 Detected Emotion: ${emotion}`;
+        const emotion = result?.data?.[0]?.label || result?.data?.[0] || "Unknown";
+        resultDiv.innerText = `🎯 Detected Emotion: ${emotion}`;
       } catch (error) {
         resultDiv.innerText = "❌ Error detecting emotion. Please try again later.";
-        console.error(error);
+        console.error("API Error:", error);
       }
     }
   </script>
